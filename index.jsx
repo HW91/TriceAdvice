@@ -1,6 +1,8 @@
+import React from "react";
+import ReactDOM from "react-dom";
 import { useState } from "react";
 
-export default function TTSApp() {
+function TTSApp() {
   const [text, setText] = useState("");
   
   const speakText = () => {
@@ -11,7 +13,7 @@ export default function TTSApp() {
 
   return (
     <div className="flex flex-col items-center p-4">
-      <h1 className="text-xl font-bold mb-4">Trice Advice</h1>
+      <h1 className="text-xl font-bold mb-4">Stroke Communication Aid</h1>
       <textarea
         className="w-full p-2 border rounded mb-4"
         rows="4"
@@ -28,3 +30,5 @@ export default function TTSApp() {
     </div>
   );
 }
+
+ReactDOM.render(<TTSApp />, document.getElementById("root"));
