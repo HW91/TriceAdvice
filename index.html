@@ -1,12 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Trice Advice</title>
-</head>
-<body>
-    <div id="root"></div>
-    <script type="module" src="index.jsx"></script>
-</body>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        text-align: center;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      textarea {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+      button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 20px;
+      }
+      h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+      h2 {
+        font-size: 18px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Stroke Communication Aid</h1>
+      
+      <textarea
+        id="textInput"
+        rows="4"
+        placeholder="Type your message here..."
+      ></textarea>
+
+      <button onclick="speakText()">Speak</button>
+      
+      <h2>Recent Inputs</h2>
+      <select id="recentDropdown" onchange="selectRecentInput()">
+        <option value="">Select a recent input...</option>
+      </select>
+    </div>
+
+    <script>
+      let recentInputs = [];
+
+      function speakText() {
+        const text = document.getElementById("textInput").value.trim();
+        
+        if (text === "") return;
+
+        // Create a new SpeechSynthesisUtterance instance
+        const utterance = new SpeechSynthesisUtterance(text);
+        speechSynthesis.speak(utterance);
+
+        // Save the input to recent inputs
+        recentInputs.unshift(text);
+        if (recentInputs.length > 20) {
+          recentInputs.pop(); // Limit to 20 recent inputs
+        }
+
+        updateRecentInputsDropdown();
+        document.getElementById("textInput").value = ""; // Clear input after speaking
+      }
+
+      function updateRecentInputsDropdown() {
+        const dropdown = document.getElementById("recentDropdown");
+        dropdown.innerHTML = "<option value=''>Select a recent input...</option>"; // Clear existing options
+
+        recentInputs.forEach((input) => {
+          const option = document.createElement("option");
+          option.value = input;
+          option.textContent = input;
+          dropdown.appendChild(option);
+        });
+      }
+
+      function selectRecentInput() {
+        const dropdown = document.getElementById("recentDropdown");
+        const selectedInput = dropdown.value;
+
+        if (selectedInput) {
+          document.getElementById("textInput").value = selectedInput;
+        }
+      }
+    </script>
+  </body>
 </html>
