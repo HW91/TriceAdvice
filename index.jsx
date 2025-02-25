@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";  // Use 'createRoot' from React 18+
 import { useState } from "react";
 
 function TTSApp() {
@@ -13,7 +13,7 @@ function TTSApp() {
 
   return (
     <div className="flex flex-col items-center p-4">
-      <h1 className="text-xl font-bold mb-4">Stroke Communication Aid</h1>
+      <h1 className="text-xl font-bold mb-4">Trice Advice</h1>
       <textarea
         className="w-full p-2 border rounded mb-4"
         rows="4"
@@ -31,4 +31,5 @@ function TTSApp() {
   );
 }
 
-ReactDOM.render(<TTSApp />, document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<TTSApp />);
