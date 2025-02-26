@@ -22,6 +22,7 @@
     }
     button {
       padding: 10px 20px;
+      margin: 5px;
       background-color: #4caf50;
       color: white;
       border: none;
@@ -45,21 +46,32 @@
       font-size: 18px;
       margin-top: 20px;
     }
+    .quick-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 5px;
+      margin-bottom: 15px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Trice Advice</h1>
     
-    <textarea
-      id="textInput"
-      rows="4"
-      placeholder="Type your message here..."
-    ></textarea>
+    <h2>Quick Messages:</h2>
+    <div class="quick-buttons">
+      <button onclick="quickSpeak('I need to use the bathroom.')">Bathroom</button>
+      <button onclick="quickSpeak('I am hungry.')">I'm hungry</button>
+      <button onclick="quickSpeak('I need help.')">I need help</button>
+      <button onclick="quickSpeak('I am in pain.')">I am in pain</button>
+    </div>
+
+    <textarea id="textInput" rows="4" placeholder="Type your message here..."></textarea>
 
     <button onclick="speakText()">Speak</button>
     
-    <h2>Recent Messages</h2>
+    <h2>Recent Inputs</h2>
     <select id="recentDropdown" onchange="selectRecentInput()">
       <option value="">Select a recent input...</option>
     </select>
@@ -70,29 +82,33 @@
 
     function speakText() {
       const text = document.getElementById("textInput").value.trim();
-      
       if (text === "") return;
 
-      // Create a new SpeechSynthesisUtterance instance
-      const utterance = new SpeechSynthesisUtterance(text);
+      speak(text);
+      saveRecentInput(text);
+    }
+
+    function quickSpeak(message) {
+      document.getElementById("textInput").value = message;
+      speak(message);
+      saveRecentInput(message);
+    }
+
+    function speak(message) {
+      const utterance = new SpeechSynthesisUtterance(message);
       speechSynthesis.speak(utterance);
+    }
 
-      // Save the input to recent inputs
+    function saveRecentInput(text) {
       recentInputs.unshift(text);
-      if (recentInputs.length > 20) {
-        recentInputs.pop(); // Limit to 20 recent inputs
-      }
-
-      // Store in localStorage
+      if (recentInputs.length > 20) recentInputs.pop();
       localStorage.setItem('recentInputs', JSON.stringify(recentInputs));
-
       updateRecentInputsDropdown();
-      document.getElementById("textInput").value = ""; // Clear input after speaking
     }
 
     function updateRecentInputsDropdown() {
       const dropdown = document.getElementById("recentDropdown");
-      dropdown.innerHTML = "<option value=''>Select a recent input...</option>"; // Clear existing options
+      dropdown.innerHTML = "<option value=''>Select a recent input...</option>";
 
       recentInputs.forEach((input) => {
         const option = document.createElement("option");
@@ -105,13 +121,11 @@
     function selectRecentInput() {
       const dropdown = document.getElementById("recentDropdown");
       const selectedInput = dropdown.value;
-
       if (selectedInput) {
         document.getElementById("textInput").value = selectedInput;
       }
     }
 
-    // Initialize the dropdown with saved recent inputs
     updateRecentInputsDropdown();
   </script>
 </body>
